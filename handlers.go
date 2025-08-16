@@ -47,5 +47,5 @@ func helpRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
-	http.ServeFile(w, r, "help.html")
+	http.ServeFile(w, r, "docs.html")
 }

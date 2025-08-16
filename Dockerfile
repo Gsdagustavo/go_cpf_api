@@ -9,7 +9,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o server main.go
+RUN go build -o server .
 
 FROM alpine:latest
 

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 )
@@ -18,44 +16,11 @@ type Response struct {
 
 func main() {
 
-	http.HandleFunc("/cpf", func(w http.ResponseWriter, r *http.Request) {
-
-		if r.Method != http.MethodPost {
-			http.Error(w, "Only post allowed!", http.StatusMethodNotAllowed)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-
-		bytes, err := io.ReadAll(r.Body)
-
-		if err != nil {
-			http.Error(w, "An error occurred while trying to read the r body", http.StatusInternalServerError)
-			return
-		}
-
-		var body Request
-
-		err = json.Unmarshal(bytes, &body)
-
-		if err != nil {
-			http.Error(w, "An error occurred while trying to unmarshal the r body", http.StatusInternalServerError)
-			return
-		}
-
-		isValid := validateCPF(body.Cpf)
-
-		if isValid {
-			response := Response{IsValid: isValid}
-
-			bytes, err = json.Marshal(response)
-
-			w.Write(bytes)
-		}
-	})
+	mux := http.NewServeMux()
+	mux.HandleFunc("/cpf", handleRequest)
 
 	fmt.Println("Server listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 
 func validateCPF(cpf string) (isValid bool) {

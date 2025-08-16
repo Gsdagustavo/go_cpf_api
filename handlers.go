@@ -1,43 +1,37 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
 )
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != http.MethodPost {
-		http.Error(w, "Only post allowed!", http.StatusMethodNotAllowed)
+	if r.Method != http.MethodGet {
+		http.Error(w, "Only get allowed!", http.StatusMethodNotAllowed)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	bytes, err := io.ReadAll(r.Body)
+	values := r.URL.Query()
 
-	if err != nil {
-		http.Error(w, "An error occurred while trying to read the r body", http.StatusInternalServerError)
+	if !values.Has("cpf") {
+		http.Error(w, "CPF is required", http.StatusBadRequest)
 		return
 	}
 
-	var body Request
+	cpf := values.Get("cpf")
 
-	err = json.Unmarshal(bytes, &body)
-
-	if err != nil {
-		http.Error(w, "An error occurred while trying to unmarshal the r body", http.StatusInternalServerError)
+	if cpf == "" || len(cpf) != 11 {
+		http.Error(w, "Invalid CPF", http.StatusBadRequest)
 		return
 	}
 
-	isValid := validateCPF(body.Cpf)
+	isValid := validateCPF(cpf)
 
 	if isValid {
-		response := Response{IsValid: isValid}
-
-		bytes, err = json.Marshal(response)
-
-		w.Write(bytes)
+		w.Write([]byte("true"))
+	} else {
+		w.Write([]byte("false"))
 	}
 }

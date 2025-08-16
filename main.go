@@ -17,7 +17,7 @@ type Response struct {
 func main() {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/cpf", handleRequest)
+	mux.HandleFunc("/", handleRequest)
 
 	fmt.Println("Server listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))

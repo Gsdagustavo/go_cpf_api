@@ -6,18 +6,11 @@ import (
 	"net/http"
 )
 
-type Request struct {
-	Cpf string `json:"cpf"`
-}
-
-type Response struct {
-	IsValid bool `json:"is_valid"`
-}
-
 func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleRequest)
+	mux.HandleFunc("/help", helpRequest)
 
 	fmt.Println("Server listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))

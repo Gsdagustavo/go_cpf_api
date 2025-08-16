@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CPF API Help</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        input[type=text] {
+            padding: 5px;
+            width: 200px;
+        }
+
+        input[type=submit] {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>CPF API Documentation</h1>
+
+<h2>GET Request</h2>
+<p>Validate a CPF using query parameters:</p>
+<pre>GET /?cpf=12345678909</pre>
+
+<h2>POST Request</h2>
+<p>Validate a CPF using JSON body:</p>
+<pre>
+POST /
+Content-Type: application/json
+
+{
+    "cpf": "12345678909"
+}
+    </pre>
+
+<h2>Response</h2>
+<p>The API responds with JSON:</p>
+<pre>
+{
+    "is_valid": true
+}
+    </pre>
+
+</body>
+</html>

@@ -1,8 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 )
+
+type Response struct {
+	IsValid bool `json:"is_valid"`
+}
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 
@@ -28,10 +33,19 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isValid := validateCPF(cpf)
+	resp := Response{IsValid: isValid}
 
-	if isValid {
-		w.Write([]byte("true"))
-	} else {
-		w.Write([]byte("false"))
+	_ = json.NewEncoder(w).Encode(resp)
+}
+
+func helpRequest(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodGet {
+		http.Error(w, "Only get allowed!", http.StatusMethodNotAllowed)
+		return
 	}
+
+	w.WriteHeader(http.StatusOK)
+
+	http.ServeFile(w, r, "help.html")
 }
